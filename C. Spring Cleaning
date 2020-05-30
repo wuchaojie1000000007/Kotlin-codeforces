@@ -1,0 +1,73 @@
+package com.example.codetest
+
+
+private fun readLn() = readLine()!! // string line
+private fun readInt() = readLn().toInt() // single int
+private fun readStrings() = readLn().split(" ") // list of strings
+private fun readInts() = readStrings().map { it.toInt() } // list of ints
+
+class SolveProblem(
+    val total: Int,
+    val max: Int,
+    val timeX: Int,
+    val timeY: Int,
+    private val bookList: List<Int>
+) {
+    var doXTime: Int = 0
+    var totalTime: Int = 0
+
+    val getSum: Int = bookList.sum()
+    fun notLegal(): Boolean = getSum() > (max * bookList.size)
+
+    fun getSum(): Int {
+        val sum: Int = bookList.take(doXTime).sum()
+        return getSum - sum
+    }
+
+    fun doX() {
+        doXTime += 1
+        totalTime += timeX
+    }
+
+    fun doY() {
+        totalTime += timeY
+    }
+
+    fun alwaysX(): Int {
+        while (doXTime < total && bookList[doXTime] > max) {
+            doX()
+        }
+        return totalTime
+    }
+
+    fun alwaysY(): Int {
+        while ( notLegal()) {
+            doX()
+        }
+        if (doXTime < total) {
+            doY()
+        }
+        return totalTime
+    }
+}
+
+
+fun main() {
+    val numOfTest: Int = readInt()
+    for (i in 1..numOfTest) {
+        val (total, max, timeX, timeY) = readInts()
+        val bookList = readInts().sortedDescending()
+
+        val solveProblem = SolveProblem(total, max, timeX, timeY, bookList)
+        val yTime: Int = solveProblem.alwaysY()
+        if (solveProblem.doXTime < total) {
+            solveProblem.totalTime -= timeY
+        }
+        val xTime: Int = solveProblem.alwaysX()
+        val finalTime: Int = if (xTime >= yTime) yTime else xTime
+        println(finalTime)
+    }
+}
+
+
+
