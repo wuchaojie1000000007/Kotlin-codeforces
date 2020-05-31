@@ -1,0 +1,35 @@
+package com.example.codetest
+
+import kotlin.math.absoluteValue
+
+
+fun main() {
+    val (wheels, need, power) = readLine()!!.split(" ").map { it.toInt() }
+    val wheelList = readLine()!!.split(" ").map { it.toInt() }.sorted()
+    var minTime: Int = Int.MAX_VALUE
+    for (i in 0..wheels - need) {
+        val time = getTime(wheelList.subList(i, i + need), power)
+        if (time<minTime)
+            minTime = time
+    }
+    println(minTime)
+}
+
+
+fun getTime(list: List<Int>, power: Int): Int {
+    var ave = if (list.size%2==0) list[list.size/2-1] else list[(list.size/2).toInt()]
+    var needPower = getPower(list, ave)
+    while (needPower > power) {
+        val index = list.indexOfFirst { it >= ave }
+        ave -= 1
+
+        needPower -= index
+    }
+    val time = list.map { (ave - it).absoluteValue }.sum()
+    return time
+}
+
+fun getPower(list: List<Int>, ave: Int) = list.filter { it <= ave }.map { ave - it }.sum()
+
+
+
