@@ -1,0 +1,34 @@
+fun main() {
+    val (numOfDoors, width) = readLine()!!.split(" ").map { it.toInt() }
+    val doorSize = readLine()!!.split(" ").map { it.toInt() }
+    repeat(readLine()!!.toInt()) {
+        val numAndPeople = readLine()!!.split(" ").map { it.toInt() }
+        val num = numAndPeople[0]
+        var doorIndex = 0
+        var index = 1
+        var vacancy = 0
+        for (i in 1..width) {
+            when {
+                i == numAndPeople[index] -> {
+                    vacancy = 0
+                    index += 1
+                    if (index == num + 1)
+                        index -=1
+                }
+                else -> {
+                    vacancy +=1
+                    if (doorIndex< numOfDoors && vacancy == doorSize[doorIndex]) {
+                        vacancy = 0
+                        doorIndex += 1
+
+                    }
+
+                }
+
+            }
+
+        }
+        println(if (doorIndex == numOfDoors) "YES" else "NO")
+
+    }
+}
