@@ -1,12 +1,13 @@
 # codeforce
 Kotlin Heroes: Episode 1
 
-F test4 timeout
+timeout.  F. Wheels test4 
+
 
 
 Kotlin Heroes: Episode 4
 
-C test5 failed.      
-D accepted
+test5 failed.  C. Spring Cleaning
+accepted D.  Constructing the Dungeon
 
 
