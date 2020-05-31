@@ -1,9 +1,8 @@
 # codeforce
 Kotlin Heroes: Episode 1
 
+timeout.  E - Sliding Doors test13.      
 timeout.  F. Wheels test4 
-
-
 
 
 
