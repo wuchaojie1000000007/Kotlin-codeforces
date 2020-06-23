@@ -1,0 +1,40 @@
+import kotlin.math.absoluteValue
+
+fun main() {
+    val (row, column, updateTimes) = readLine()!!.split(" ").map { it.toInt() }
+    val matrix = MutableList(row) { MutableList(column) {0L} }
+    for (i in 1..row){
+        matrix[i-1] = readLine()!!.split(" ").map { it.toLong() }.toMutableList()
+    }
+
+    val moves = MutableList(row) { MutableList(column) {0L} }
+    for (i in 1..row){
+        for (j in 1..column){
+            for (m in 1..row) {
+                for (n in 1..column){
+                    moves[i-1][j-1] += (m+n-i-j).absoluteValue*matrix[m-1][n-1]
+                }
+            }
+        }
+    }
+
+    val movesList = MutableList(updateTimes+1) {0L}
+    movesList[0] = moves.flatten().min()!!
+
+    for (p in 1..updateTimes) {
+        val (x, y, z) = readLine()!!.split(" ").map { it.toInt() }
+        matrix[x-1][y-1] = z.toLong()
+        for (i in 1..row){
+            for (j in 1..column){
+                for (m in 1..row) {
+                    for (n in 1..column){
+                        moves[i-1][j-1] += (m+n-i-j).absoluteValue*matrix[m-1][n-1]
+                    }
+                }
+            }
+        }
+        movesList[p] = moves.flatten().min()!!
+    }
+    println(movesList.joinToString(" "))
+}
+
