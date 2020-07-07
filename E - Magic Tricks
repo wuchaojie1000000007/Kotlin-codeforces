@@ -1,0 +1,32 @@
+fun main() {
+    val (n, m, k) = readLine()!!.split(" ").map { it.toInt() }
+
+    val fakeSwap = MutableList(n) { Int.MAX_VALUE - 1 }
+    fakeSwap[k - 1] = 0
+    var pos1candidate = -1
+    var pos2candidate = -1
+    repeat(m) {
+        var (pos1, pos2) = readLine()!!.split(" ").map { it.toInt() }
+
+        pos1 -= 1
+        pos2 -= 1
+
+        pos1candidate = minOf(fakeSwap[pos2], fakeSwap[pos1] + 1)
+        pos2candidate = minOf(fakeSwap[pos1], fakeSwap[pos2] + 1)
+
+        fakeSwap[pos1] = pos1candidate
+        fakeSwap[pos2] = pos2candidate
+    }
+
+    val change = mutableListOf<Int>()
+    repeat(n) {
+        if (fakeSwap[it] == Int.MAX_VALUE-1)
+            change += it
+    }
+    for (index in change) {
+        fakeSwap[index] = -1
+    }
+    println(fakeSwap.joinToString(" "))
+}
+
+accepted
