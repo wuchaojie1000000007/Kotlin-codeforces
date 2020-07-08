@@ -1,0 +1,58 @@
+import kotlin.math.absoluteValue
+
+fun main() {
+    val (n, m, q) = readLine()!!.split(" ").map { it.toInt() }
+    val armyMatrix = Array(n) { readLine()!!.split(" ").map { it.toInt() }.toIntArray() }
+
+    val rowSum = MutableList(n) { i -> (0..m - 1).map { j -> armyMatrix[i][j].toLong() }.sum() }
+    val columnSum = MutableList(m) { j -> (0..n - 1).map { i -> armyMatrix[i][j].toLong() }.sum() }
+
+    val rowRes = rowSum.toResult()
+    val columnRes = columnSum.toResult()
+
+    fun res() = rowRes.min()!! + columnRes.min()!!
+    print(res())
+
+    repeat(q) {
+        val (x, y, value) = readLine()!!.split(" ").map { it.toInt() }
+        val (row, column) = (x - 1) to (y - 1)
+
+        val delta = value - armyMatrix[row][column]
+        armyMatrix[row][column] = value
+
+        (0 until n).forEach {
+            rowRes[it] = rowRes[it] + (row - it).absoluteValue * delta.toLong()
+        }
+        (0 until m).forEach {
+            columnRes[it] = columnRes[it] + (column - it).absoluteValue * delta.toLong()
+        }
+
+        print(" ${res()}")
+    }
+}
+
+fun MutableList<Long>.toResult(): MutableList<Long> {
+    val s = MutableList<Long>(size){0L}
+
+    var rightArmy = 0L
+    var rightMove = 0L
+    var leftArmy = 0L
+    var leftMove = 0L
+
+    (0 until size).forEach {
+        rightArmy += get(it)
+        rightMove += (it+1) * get(it)
+    }
+
+    (0 until size).forEach {
+        rightMove -= rightArmy
+        rightArmy -= get(it)
+        s[it] = rightMove + leftMove
+        leftArmy += get(it)
+        leftMove += leftArmy
+    }
+
+    return s
+}
+
+accepted
