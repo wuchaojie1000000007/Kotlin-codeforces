@@ -1,0 +1,87 @@
+fun main() {
+    val (k, n) = readLine()!!.split(" ").map { it.toInt() }
+    val p = readLine()!!.split(" ").map { it.toInt() }
+    val x = readLine()!!.split(" ").map { it.toInt() }
+
+    val c = solveCam(n, p, x)
+    if (c == null) {
+        println("NO")
+    } else {
+        println("YES")
+        println("${c.s1} ${c.p1}")
+        println("${c.s2} ${c.p2}")
+    }
+}
+
+class Cam(val s1: Int, val p1: Int, val s2: Int, val p2: Int)
+
+tailrec fun gcd(x: Int, y: Int): Int = if (y == 0) x else gcd(y, x % y)
+
+fun solveCam(n: Int, p: List<Int>, x: List<Int>): Cam? {
+
+    fun searchS2P2(s1: Int, p1: Int): Cam? {
+
+        // true -> cam1 can capture, false -> cam1 can not capture
+        val s = List<Boolean>(n) { it -> (x[it] - s1) % p1 == 0 }
+
+        // Find first element that cam1 can not capture
+        val i = s.indexOf(false)
+
+        // All element can be cam1 capture, find a result and return it.
+        if (i<0){
+            return Cam(s1, p1, s1, p1)
+        }
+
+        // First element that cam1 can not capture
+        val s2 = x[i]
+
+        // Find second element that cam1 can not capture
+        var j = i+1
+        while (j<n&&s[j]){
+            j++
+        }
+
+        // Only one element cam1 can not capture
+        if (j>=n){
+            return Cam(s1, p1, s2, p[0])
+        }
+
+        // More than two element cam1 can not capture, find the gcd of the period
+        var p2m = x[j]-s2
+        (j+1 until n).forEach {
+            if (!s[it])
+                p2m = gcd(p2m, x[it]-s2)
+        }
+
+        // Check p2m is or is not multiple of something in p.
+        for (p2 in p) {
+            if (p2m % p2 == 0)
+                return Cam(s1, p1, s2, p2)
+        }
+
+        return null
+
+    }
+
+    fun searchP1(s1: Int, p1m: Int): Cam? {
+        for (p1 in p) {
+            if (p1m % p1 == 0) {
+                searchS2P2(s1, p1)?.let { return it }
+            }
+        }
+        return null
+    }
+
+    // Only two element.
+    if (n == 2)
+        return Cam(x[0], p[0], x[1], p[0])
+
+    // Atleast three elements.
+    for (i in 1..2) {
+        searchP1(x[0], x[i] - x[0])?.let { return it }
+    }
+    return searchP1(x[1], x[2] - x[1])
+
+}
+
+accepted
